@@ -10,6 +10,7 @@ class Stack:
     
     def pop(self):
         return self.arr.pop(-1)
+
 class Queue:
     def __init__(self):
         self.arr = []
@@ -25,6 +26,7 @@ class Queue:
     
     def __repr__(self):
         return repr(self.arr)
+
 class Node:
     def __init__(self,Value,Parent=None,depth = 0):
         self.value = Value
@@ -39,7 +41,10 @@ class Node:
     
     def __repr__(self):
         return repr(self.value)
+    
 def Search(start,end,Neighbours,is_BFS=True,depthLimit=-1):
+    start = Node(start)
+    end = Node(end)
     discovered = set()
     if is_BFS:
         queue = Queue()
@@ -58,7 +63,7 @@ def Search(start,end,Neighbours,is_BFS=True,depthLimit=-1):
             sol.reverse()
             return sol
 
-        for neighbour in Neighbours(node):
+        for neighbour in toNodes(Neighbours)(node):
             if neighbour not in discovered:
                 if depthLimit>0:
                     if depthLimit>=node.depth:
@@ -67,9 +72,9 @@ def Search(start,end,Neighbours,is_BFS=True,depthLimit=-1):
                     queue.push(neighbour)
     return False
 def HillClimbing(start,Heuristic,Neighbours):
-    node = start
+    node = Node(start)
     while True:
-        new = max(Neighbours(node),key=lambda x: Heuristic(x))
+        new = max(toNodes(Neighbours)(node),key=lambda x: Heuristic(x))
         if Heuristic(node)>=Heuristic(new):
             sol = []
             while node.parent is not None:
